@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+echo "---> Solc Buildpack"
+
+# GET ARGS
+plan=${CNB_BP_PLAN_PATH}
+
+# CREATE THE LAYER DIRECTORY
+node_js_layer="${CNB_LAYERS_DIR}"/node-js
+mkdir -p "${node_js_layer}"
+
+# DOWNLOAD node-js
+default_node_js_version="20.10.0"
+node_js_version=$(cat "$plan" | yj -t | jq -r '.entries[] | select(.name == "node-js") | .metadata.version' || echo ${default_node_js_version})
+node_js_url=https://nodejs.org/dist/v${node_js_version}/node-v${node_js_version}-linux-x64.tar.xz
+remote_nodejs_version=$(cat "${CNB_LAYERS_DIR}/node-js.toml" 2> /dev/null | yj -t | jq -r .metadata.nodejs_version 2>/dev/null || echo 'NOT FOUND')
+if [[ "${node_js_url}" != *"${remote_nodejs_version}"* ]] ; then
+    echo "-----> Downloading and extracting NodeJS"
+    wget -q -O - "${node_js_url}" | tar -xJf - --strip-components 1 -C "${node_js_layer}"
+else
+    echo "-----> Reusing NodeJS"
+fi
+
+export PATH=${node_js_layer}/bin:$PATH
+
+npm i npm -g
+echo "node version:" $(node -v)
+echo "npm version:" $(npm -v)
+
+echo "-----> Install solc"
+npm i solc -g
+echo "solc version:" $(solcjs --version)
+
+echo "-----> Install $(pwd) dependency"
+npm i
+
+# MAKE node-js AVAILABLE DURING LAUNCH and CACHE the LAYER
+cat > "${CNB_LAYERS_DIR}/node-js.toml" << EOL
+[types]
+launch = true
+build = true
+cache = true
+
+[metadata]
+nodejs_version = "${node_js_version}"
+EOL
+
+
+# SET DEFAULT START COMMAND
+cat > "${CNB_LAYERS_DIR}/launch.toml" << EOL
+[[processes]]
+type = "web"
+command = ["npm", "start"]
+default = true
+EOL
