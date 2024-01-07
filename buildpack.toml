@@ -6,7 +6,7 @@ api = "0.10"
   id = "amp-buildpacks/solc"
   keywords = ["solc", "composite"]
   name = "Solc Build Pack"
-  version = "0.0.1"
+  version = "0.1.0"
 
   [[buildpack.licenses]]
     type = "Apache-2.0"
