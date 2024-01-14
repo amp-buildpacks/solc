@@ -1,4 +1,5 @@
-# solc
+# `ghcr.io/amp-buildpacks/solc`
+
 A Cloud Native Buildpack for Solc
 
 ## Usage
