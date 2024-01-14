@@ -4,7 +4,6 @@ github:
 
 package:
   repositories:   ["ghcr.io/amp-buildpacks/solc"]
-  include_dependencies: false
   register:       false
   registry_token: ${{ secrets.AMP_BUILDPACKS_BOT_GITHUB_TOKEN }}
 
