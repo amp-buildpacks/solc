@@ -21,7 +21,7 @@ api = "0.8"
   keywords = ["solc", "Solidity"]
   sbom-formats = ["application/vnd.cyclonedx+json", "application/vnd.syft+json"]
   name = "AMP Buildpack for Solc"
-  version = "0.1.0"
+  version = "{{.version}}"
 
   [[buildpack.licenses]]
     type = "Apache-2.0"
