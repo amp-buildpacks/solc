@@ -20,7 +20,7 @@ api = "0.8"
   id = "amp-buildpacks/solc"
   keywords = ["solc", "Solidity"]
   sbom-formats = ["application/vnd.cyclonedx+json", "application/vnd.syft+json"]
-  name = "Paketo Buildpack for Solc"
+  name = "AMP Buildpack for Solc"
   version = "0.1.0"
 
   [[buildpack.licenses]]
